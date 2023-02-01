@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -24,12 +25,14 @@ public class Product implements Serializable{
     private Long id;
 
     @Column(name = "name", length = 50)
+    @NotEmpty(message = "Nama harus diisi")
     private String name;
     
     @Column(name = "harga")
     private double harga;
     
     @Column(name = "deskripsi", length = 512)
+    @NotEmpty(message = "Deskripsi harus diisi")
     private String deskripsi;
 
     @CreatedDate
