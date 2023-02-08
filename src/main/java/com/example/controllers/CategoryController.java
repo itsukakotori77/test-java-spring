@@ -6,9 +6,9 @@ import java.util.Map;
 import javax.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,25 +18,25 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.validation.FieldError;
-import com.example.dto.ProductData;
-import com.example.entities.Product;
-import com.example.entities.Supplier;
-import com.example.services.ProductService;
+import com.example.dto.CategoryData;
+import com.example.entities.Category;
+import com.example.services.CategoryService;
 
 @RestController
-@RequestMapping
-public class ProductController 
+@RequestMapping("/v1/api/category")
+public class CategoryController 
 {
-    
-    @Autowired
-    private ProductService productService;
-
+ 
     @Autowired
     private ModelMapper modelMapper;
 
-    @PostMapping("/v1/api/products")
-    public ResponseEntity<?> create(@Valid @RequestBody ProductData productData, Errors errors)
+    @Autowired
+    private CategoryService categoryService;
+
+    @PostMapping
+    public ResponseEntity<?> create(@Valid @RequestBody CategoryData categoryData, Errors errors)
     {
+
         // ==== Test code 2 ====
         Map<String, Object> map = new LinkedHashMap<String, Object>();
         Map<String, String> message =  new HashMap<>();
@@ -49,41 +49,44 @@ public class ProductController
             map.put("code", "01");
             map.put("message", "validasi error");
             map.put("data", message);
+
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(map);
         }
 
         try {
-            Product product = modelMapper.map(productData, Product.class);
+            Category supplier = modelMapper.map(categoryData, Category.class);
             map.put("code", "00");
             map.put("message", "data berhasil diinput");
-            map.put("data", productService.save(product));
+            map.put("data", categoryService.save(supplier));
+
             return ResponseEntity.status(HttpStatus.OK).body(map);
             
         } catch (Exception e) {
             map.put("code", "01");
             map.put("message", "terjadi kesalahan pada proses input data");
+
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(map);
         }
     }
-
-    @GetMapping("/v1/api/products")
+    
+    @GetMapping
     public ResponseEntity<?> all()
     {
         Map<String, Object> map = new LinkedHashMap<String, Object>();
-        Iterable<Product> productList = productService.findAll();
+        Iterable<Category> productList = categoryService.findAll();
         map.put("code", "00");
         map.put("message", "data berhasil ditampilkan");
         map.put("data", productList);
         return ResponseEntity.status(HttpStatus.OK).body(map);
     }
     
-    @GetMapping("/v1/api/products/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<?> findOne(@PathVariable("id") long id)
     {
-        HashMap<String, Object> map = new HashMap<>();
-        Product product = productService.findOne(id);
+        Map<String, Object> map = new LinkedHashMap<String, Object>();
+        Category category = categoryService.findOne(id);
 
-        if(product == null){
+        if(category == null){
             map.put("code", "00");
             map.put("message", "data tidak ditemukan");
             return ResponseEntity.status(HttpStatus.OK).body(map);
@@ -91,13 +94,14 @@ public class ProductController
 
         map.put("code", "00");
         map.put("message", "data ditemukan");
-        map.put("data", product);
+        map.put("data", category);
         return ResponseEntity.status(HttpStatus.OK).body(map);
     }
 
-    @PutMapping("/v1/api/products")
-    public ResponseEntity<?> update(@Valid @RequestBody ProductData productData, Errors errors)
+    @PutMapping
+    public ResponseEntity<?> update(@Valid @RequestBody CategoryData categoryData, Errors errors)
     {
+
         // ==== Test code 2 ====
         Map<String, Object> map = new LinkedHashMap<String, Object>();
         Map<String, String> message =  new HashMap<>();
@@ -111,49 +115,33 @@ public class ProductController
             map.put("message", "validasi error");
             map.put("data", message);
 
-            return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
-        }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(map);
+        }   
 
         try {
-            Product product = modelMapper.map(productData, Product.class);
+            Category category = modelMapper.map(categoryData, Category.class);
             map.put("code", "00");
             map.put("message", "data berhasil diinput");
-            map.put("data", productService.save(product));
-            // return new ResponseEntity<>(map, HttpStatus.OK);
+            map.put("data", categoryService.save(category));
+
             return ResponseEntity.status(HttpStatus.OK).body(map);
             
         } catch (Exception e) {
             map.put("code", "01");
             map.put("message", "terjadi kesalahan pada proses input data");
+
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(map);
         }
     }
 
-    @DeleteMapping("/v1/api/products/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteData(@PathVariable("id") Long id)
     {
         Map<String, Object> map = new LinkedHashMap<String, Object>(); 
-        productService.removeOne(id);
+        categoryService.removeOne(id);
         map.put("code", "00");
         map.put("message", "data berhasil dihapus");
         return ResponseEntity.status(HttpStatus.OK).body(map);
     }
 
-    @PostMapping("/v1/api/products/{product_id}")
-    public ResponseEntity<?> addSupplier(@RequestBody Supplier supplier, @PathVariable("product_id") Long productId)
-    {
-        Map<String, Object> map = new LinkedHashMap<String, Object>();
-        productService.addSupplier(supplier, productId);
-        try {
-            map.put("code", "00");
-            map.put("message", "Supplier berhasil ditambahkan");
-            return ResponseEntity.status(HttpStatus.OK).body(map);
-        } catch(Exception e){
-            map.put("code", "01");
-            map.put("message", "terjadi kesalahan pada proses penambahan supplier");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(map);
-        }
-    }
-
-    
 }
