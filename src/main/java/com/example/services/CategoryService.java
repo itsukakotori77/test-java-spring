@@ -10,7 +10,8 @@ import com.example.repositories.CategoryRepository;
 
 @Service
 @Transactional
-public class CategoryService {
+public class CategoryService 
+{
     
     @Autowired
     private CategoryRepository categoryRepo;

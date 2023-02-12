@@ -10,7 +10,8 @@ import com.example.repositories.SupplierRepository;
 
 @Service
 @Transactional
-public class SupplierService {
+public class SupplierService 
+{
 
     @Autowired
     private SupplierRepository supplierRepo;

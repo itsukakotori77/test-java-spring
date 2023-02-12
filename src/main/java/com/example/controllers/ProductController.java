@@ -2,6 +2,7 @@ package com.example.controllers;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import javax.validation.Valid;
 import org.modelmapper.ModelMapper;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.validation.FieldError;
+import com.example.dto.FilterData;
 import com.example.dto.ProductData;
 import com.example.entities.Product;
 import com.example.entities.Supplier;
@@ -153,6 +155,29 @@ public class ProductController
             map.put("message", "terjadi kesalahan pada proses penambahan supplier");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(map);
         }
+    }
+
+    @PostMapping("/v1/api/product-filter")
+    public ResponseEntity<?> filter(@RequestBody FilterData filter)
+    {
+        Map<String, Object> map = new LinkedHashMap<String, Object>();
+        List<Product> data = productService.filter(filter.getName());
+
+        if(data.isEmpty()){
+
+            map.put("code", "00");
+            map.put("message", "Data tidak ditemukan");
+            map.put("data", null);
+            
+            return ResponseEntity.status(HttpStatus.OK).body(map);
+        }
+
+        map.put("code", "00");
+        map.put("message", "Data berhasil difilter");
+        map.put("data", data);
+        
+        return ResponseEntity.status(HttpStatus.OK).body(map);
+
     }
 
     
