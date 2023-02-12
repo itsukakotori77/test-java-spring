@@ -14,15 +14,17 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @Table(name = "supplier")
-@JsonIdentityInfo(
-    generator = ObjectIdGenerators.PropertyGenerator.class,
-    property = "id"
-)
+// @JsonIdentityInfo(
+//     generator = ObjectIdGenerators.PropertyGenerator.class,
+//     property = "id"
+// )
 public class Supplier implements Serializable{
     
 
@@ -49,7 +51,8 @@ public class Supplier implements Serializable{
     private Date updated_at;
 
     @ManyToMany(mappedBy = "suppliers")
-    // @JsonBackReference
+    
+    @JsonBackReference
     private List<Product> products;
 
     // ==== Constructor ====

@@ -180,5 +180,27 @@ public class ProductController
 
     }
 
+    @PostMapping("/v1/api/product-filter-supplier/{supplierId}")
+    public ResponseEntity<?> findBySupplier(@PathVariable("supplierId") Long supplierId)
+    {
+        Map<String, Object> map = new LinkedHashMap<String, Object>();
+        List<Product> data = productService.findBySupplier(supplierId);
+
+        if(data.isEmpty()){
+
+            map.put("code", "00");
+            map.put("message", "Data tidak ditemukan");
+            map.put("data", data);
+            
+            return ResponseEntity.status(HttpStatus.OK).body(map);
+        }
+
+        map.put("code", "00");
+        map.put("message", "Data berhasil difilter");
+        map.put("data", data);
+        
+        return ResponseEntity.status(HttpStatus.OK).body(map);
+    }
+
     
 }

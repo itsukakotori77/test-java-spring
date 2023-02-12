@@ -1,5 +1,6 @@
 package com.example.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,9 @@ public class ProductService
     
     @Autowired
     private ProductRepository productRepo;
+
+    @Autowired
+    private SupplierService supplierService;
 
     public Product save(Product product)
     {
@@ -57,5 +61,16 @@ public class ProductService
     public List<Product> filter(String name)
     {
         return productRepo.filter("%"+name+"%");
+    }
+
+    public List<Product> findBySupplier(Long supplierId)
+    {
+        Supplier supplier = supplierService.findOne(supplierId);
+
+        if(supplier == null){
+            return new ArrayList<>();
+        }
+
+        return productRepo.findBySupplier(supplier);
     }
 }
