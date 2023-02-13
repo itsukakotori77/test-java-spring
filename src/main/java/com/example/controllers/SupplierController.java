@@ -2,6 +2,7 @@ package com.example.controllers;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import javax.validation.Valid;
 import org.modelmapper.ModelMapper;
@@ -143,6 +144,82 @@ public class SupplierController
         supplierService.removeOne(id);
         map.put("code", "00");
         map.put("message", "data berhasil dihapus");
+        return ResponseEntity.status(HttpStatus.OK).body(map);
+    }
+
+    @PostMapping("/filter-email")
+    public ResponseEntity<?> findByEmail(@RequestBody SupplierData supplierData)
+    {
+        Map<String, Object> map = new LinkedHashMap<String, Object>();
+        Supplier data = supplierService.findByEmail(supplierData.getEmail());
+
+        if(data == null){
+            map.put("code", "00");
+            map.put("message", "tidak ada data");
+            return ResponseEntity.status(HttpStatus.OK).body(map);
+        }
+        
+        map.put("code", "00");
+        map.put("message", "data berhasil difilter");
+        map.put("data", data);
+        return ResponseEntity.status(HttpStatus.OK).body(map);
+    }
+
+
+    @PostMapping("/filter")
+    public ResponseEntity<?> findByEmailList(@RequestBody SupplierData supplierData)
+    {
+        Map<String, Object> map = new LinkedHashMap<String, Object>();
+        List<Supplier> data = supplierService.findByEmailList(supplierData.getEmail());
+
+        if(data.isEmpty()){
+            map.put("code", "00");
+            map.put("message", "tidak terdapat data");
+            return ResponseEntity.status(HttpStatus.OK).body(map);
+        }
+
+        map.put("code", "00");
+        map.put("message", "data berhasil dicari");
+        map.put("data", data);
+
+        return ResponseEntity.status(HttpStatus.OK).body(map);
+    }
+
+    @PostMapping("/filter-startwith")
+    public ResponseEntity<?> findByEmailStartWith(@RequestBody SupplierData supplierData)
+    {
+        Map<String, Object> map = new LinkedHashMap<String, Object>();
+        List<Supplier> data = supplierService.findByEmailStart(supplierData.getEmail());
+
+        if(data.isEmpty()){
+            map.put("code", "00");
+            map.put("message", "tidak terdapat data");
+            return ResponseEntity.status(HttpStatus.OK).body(map);
+        }
+
+        map.put("code", "00");
+        map.put("message", "data berhasil dicari");
+        map.put("data", data);
+
+        return ResponseEntity.status(HttpStatus.OK).body(map);
+    }
+
+    @PostMapping("/filter-name-email")
+    public ResponseEntity<?> filterAnother(@RequestBody SupplierData supplierData)
+    {
+        Map<String, Object> map = new LinkedHashMap<String, Object>();
+        List<Supplier> data = supplierService.filter(supplierData.getName(), supplierData.getEmail());
+
+        if(data.isEmpty()){
+            map.put("code", "00");
+            map.put("message", "tidak terdapat data");
+            return ResponseEntity.status(HttpStatus.OK).body(map);
+        }
+
+        map.put("code", "00");
+        map.put("message", "data berhasil dicari");
+        map.put("data", data);
+
         return ResponseEntity.status(HttpStatus.OK).body(map);
     }
 }
