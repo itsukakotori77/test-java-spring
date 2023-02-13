@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.validation.FieldError;
 import com.example.dto.FilterData;
 import com.example.dto.ProductData;
+import com.example.dto.SupplierData;
 import com.example.entities.Product;
 import com.example.entities.Supplier;
 import com.example.services.ProductService;
@@ -142,9 +143,10 @@ public class ProductController
     }
 
     @PostMapping("/v1/api/products/{product_id}")
-    public ResponseEntity<?> addSupplier(@RequestBody Supplier supplier, @PathVariable("product_id") Long productId)
+    public ResponseEntity<?> addSupplier(@RequestBody SupplierData supplierData, @PathVariable("product_id") Long productId)
     {
         Map<String, Object> map = new LinkedHashMap<String, Object>();
+        Supplier supplier = modelMapper.map(supplierData, Supplier.class);
         productService.addSupplier(supplier, productId);
         try {
             map.put("code", "00");

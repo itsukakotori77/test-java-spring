@@ -1,10 +1,10 @@
 package com.example.repositories;
 
 import java.util.List;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import com.example.entities.Supplier;
 
-public interface SupplierRepository extends CrudRepository<Supplier, Long>{
+public interface SupplierRepository extends JpaRepository<Supplier, Long>{
  
     // Find By Email
     Supplier findByEmail(String email);
