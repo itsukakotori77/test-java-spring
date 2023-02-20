@@ -2,7 +2,6 @@ package com.example.repositories;
 
 import java.util.List;
 import javax.websocket.server.PathParam;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import com.example.entities.Product;

@@ -1,12 +1,12 @@
 package com.example.services;
 
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.example.entities.Category;
 import com.example.repositories.CategoryRepository;
+import org.springframework.data.domain.Pageable;
 
 @Service
 @Transactional
@@ -40,5 +40,10 @@ public class CategoryService
     public void removeOne(Long id)
     {
         categoryRepo.deleteById(id);
+    }
+
+    public Iterable<Category> findByName(String name, Pageable pageable)
+    {
+        return categoryRepo.findByNameContains(name, pageable);
     }
 }
